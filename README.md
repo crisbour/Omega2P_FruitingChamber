@@ -14,5 +14,5 @@ Output inside FC:
 - 5v Fan to homogenize temperature and humidity withi the FC
 
 User Interface:
-- 16x2 LCD display with I<sup>2</sup> interface
-- Rotary Encoder + RGB LED with I<sup>2</sup> interface
+- 16x2 LCD display with I<sup>2</sup>C interface
+- Rotary Encoder + RGB LED with I<sup>2</sup>C interface
