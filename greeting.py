@@ -4,6 +4,9 @@ import os
 import onionGpio
 from temperatureSensor import TemperatureSensor
 import oneWire
+from datetime import datetime
+
+dayStart=9; dayFinish=6;
 
 oneWireGpio=11
 def strTemp(sensor):
@@ -17,7 +20,6 @@ LampPin=1; FoggerPin=45; StirPin=15;
 LampObj=onionGpio.OnionGpio(LampPin)
 StirObj=onionGpio.OnionGpio(StirPin)
 FoggerObj=onionGpio.OnionGpio(FoggerPin) 
-LampVal=False
 
 #1-Wire Init
 if not oneWire.setupOneWire(str(oneWireGpio)):
@@ -28,24 +30,26 @@ if not sensor.ready:
 	print("Sensore was not set up correctly.")
 
 os.system('onion pwm 0 0 1000')
-LampObj.setOutputDirection(LampVal)
+LampObj.setOutputDirection(0)
 FoggerObj.setOutputDirection(0)
 StirObj.setOutputDirection(1)
 
 while True:
-	LampObj.setOutputDirection(LampVal)
-	
-	for i in range(0, 11+(2*LampVal-1)*4):
-		strTemp(sensor)
+	now=datetime.now()
+
+	if(dayStart<=now.hour<dayFinish):
+		LampObj.setOutputDirection(1)
+	else:
+		LampObj.setOutputDirection(0)
+
+	if(0<=now.minute<2):
 		FoggerObj.setOutputDirection(1)
 		os.system('onion pwm 0 85 1000')
 		StirObj.setOutputDirection(1)
-		time.sleep(120)
-		strTemp(sensor)
+	else:
 		FoggerObj.setOutputDirection(0)
 		os.system('onion pwm 0 0 1000')
-		StirObj.setOutputDirection(0) 
-		time.sleep(3480)
-
-	LampVal=not LampVal
-	print('Lamp Toggled')
+		StirObj.setOutputDirection(0)
+    		
+	if(now.minute%10==0):
+    		strTemp(sensor)
