@@ -50,14 +50,14 @@ while True:
 			print("It's night time!");
 			dayBool=False
 
-	if(0<=now.minute<2):
+	if(0<=now.minute<5):
 		FoggerObj.setOutputDirection(1)
-		os.system('onion pwm 0 85 1000')
+		os.system('onion pwm 0 90 1000')
 		StirObj.setOutputDirection(1)
 	else:
 		FoggerObj.setOutputDirection(0)
 		os.system('onion pwm 0 0 1000')
 		StirObj.setOutputDirection(0)
     		
-	if(now.minute%10==0):
+	if(now.minute%10==0 and now.second==0):
     		strTemp(sensor)
