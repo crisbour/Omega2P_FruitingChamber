@@ -6,7 +6,7 @@ from temperatureSensor import TemperatureSensor
 import oneWire
 from datetime import datetime
 
-dayStart=9; dayFinish=18;
+dayStart=9; dayFinish=21;
 
 oneWireGpio=11
 def strTemp(sensor):
