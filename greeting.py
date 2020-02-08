@@ -6,7 +6,7 @@ from temperatureSensor import TemperatureSensor
 import oneWire
 from datetime import datetime
 
-dayStart=9; dayFinish=6;
+dayStart=9; dayFinish=18;
 
 oneWireGpio=11
 def strTemp(sensor):
@@ -34,13 +34,21 @@ LampObj.setOutputDirection(0)
 FoggerObj.setOutputDirection(0)
 StirObj.setOutputDirection(1)
 
+dayBool=False
+
 while True:
 	now=datetime.now()
 
 	if(dayStart<=now.hour<dayFinish):
 		LampObj.setOutputDirection(1)
+		if(not dayBool):
+			print("It's day time!");
+			dayBool=True
 	else:
 		LampObj.setOutputDirection(0)
+		if(dayBool):
+			print("It's night time!");
+			dayBool=False
 
 	if(0<=now.minute<2):
 		FoggerObj.setOutputDirection(1)
