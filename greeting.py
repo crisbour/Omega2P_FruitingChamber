@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 # Importing package
 import time
 import os
@@ -34,10 +36,18 @@ LampObj.setOutputDirection(0)
 FoggerObj.setOutputDirection(0)
 StirObj.setOutputDirection(1)
 
-dayBool=False
+foggSet=True
+
+now=datetime.now()
+if(dayStart<=now.hour<dayFinish):
+	dayBool=False
+else:
+	dayBool=True
+
+print("Current time: "+ now.strftime("%c"));
 
 while True:
-	now=datetime.now()
+	now=datetime.now() 
 
 	if(dayStart<=now.hour<dayFinish):
 		LampObj.setOutputDirection(1)
@@ -50,14 +60,18 @@ while True:
 			print("It's night time!");
 			dayBool=False
 
-	if(0<=now.minute<5):
+	if 45<=now.minute<50 and (not foggSet) :
 		FoggerObj.setOutputDirection(1)
-		os.system('onion pwm 0 90 1000')
 		StirObj.setOutputDirection(1)
-	else:
+		os.system('onion pwm 0 90 1000')
+		print('Misting')
+		foggSet=True
+	if not(45<=now.minute<50) and foggSet :
 		FoggerObj.setOutputDirection(0)
-		os.system('onion pwm 0 0 1000')
 		StirObj.setOutputDirection(0)
+		os.system('onion pwm 0 0 1000')
+		print('Pause')
+		foggSet=False
     		
 	if(now.minute%10==0 and now.second==0):
     		strTemp(sensor)
