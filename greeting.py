@@ -15,9 +15,9 @@ def strTemp(sensor):
 	value=sensor.readValue()
 	print("T= "+str(value) +" C")
 
+#I/O and PWM set up
 os.system('omega2-ctrl gpiomux set uart1 gpio')
 os.system('omega2-ctrl gpiomux set pwm0 pwm')
-
 LampPin=1; FoggerPin=45; StirPin=15;
 LampObj=onionGpio.OnionGpio(LampPin)
 StirObj=onionGpio.OnionGpio(StirPin)
@@ -50,12 +50,12 @@ while True:
 	now=datetime.now() 
 
 	if(dayStart<=now.hour<dayFinish):
-		LampObj.setOutputDirection(1)
+		LampObj.setOutputDirection(0)	#Turn on the lamp
 		if(not dayBool):
 			print("It's day time!");
 			dayBool=True
 	else:
-		LampObj.setOutputDirection(0)
+		LampObj.setOutputDirection(1)	#Turn off the lamp
 		if(dayBool):
 			print("It's night time!");
 			dayBool=False
@@ -63,15 +63,16 @@ while True:
 	if 45<=now.minute<50 and (not foggSet) :
 		FoggerObj.setOutputDirection(1)
 		StirObj.setOutputDirection(1)
-		os.system('onion pwm 0 90 1000')
+		os.system('onion pwm 0 100 1000')
 		print('Misting')
 		foggSet=True
 	if not(45<=now.minute<50) and foggSet :
+		time.sleep(30)
 		FoggerObj.setOutputDirection(0)
 		StirObj.setOutputDirection(0)
 		os.system('onion pwm 0 0 1000')
 		print('Pause')
 		foggSet=False
-    		
+	
 	if(now.minute%10==0 and now.second==0):
-    		strTemp(sensor)
+		strTemp(sensor)				#Display temperature inside the FC
